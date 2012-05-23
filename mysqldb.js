@@ -2,17 +2,18 @@ var Client = require('mysql').Client,
 	client = new Client(),
 	
 	dataBaseName = 'dribbbleimage',
-	tableName = 'dribbble';
+	tableName = 'dribbblelink';
 	
 client.user = 'root';
 client.password = 'sskirngke';
 
-var insertLink = function(url, title, date){
-	client.query('USE ' + tableName);
+var insertLink = function(url, title, date, tags, color){
+	client.query('USE ' + dataBaseName);
 	client.query(
 		 	'INSERT INTO '+ tableName +' ' +  
-  			'SET title = ?, date = ?, url = ?',  
-  			[title, date, url]);
-  	client.close();
+  			'SET title = ?, date = ?, url = ?, tags = ?, color = ?',  
+  			[title, date, url, tags, color]);
+	console.log('insert data ' + url + ' ' + title + ' ' + date + ' ' + tags + ' ' + color);
+  	client.end();
 }
 exports.insertLink = insertLink;

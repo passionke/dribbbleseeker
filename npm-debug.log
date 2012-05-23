@@ -1,0 +1,100 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'node-inspector' ]
+info using npm@1.1.21
+info using node@v0.6.18
+verbose config file /Users/jiqingke/.npmrc
+verbose config file /usr/local/etc/npmrc
+verbose config file /usr/local/lib/node_modules/npm/npmrc
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/async/package.json
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/eventproxy/package.json
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/jsdom/package.json
+verbose loadDefaults jsdom@0.2.14
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/mysql/package.json
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/request/package.json
+verbose loadDefaults request@2.9.202
+verbose caching /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/require/package.json
+verbose loadDefaults require@0.4.9
+verbose cache add [ 'node-inspector', null ]
+silly cache add: name, spec, args [ undefined, 'node-inspector', [ 'node-inspector', null ] ]
+verbose parsed url { pathname: 'node-inspector',
+verbose parsed url   path: 'node-inspector',
+verbose parsed url   href: 'node-inspector' }
+verbose addNamed [ 'node-inspector', '' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'node-inspector', '', false ]
+verbose raw, before any munging node-inspector
+verbose url resolving [ 'https://registry.npmjs.org/', './node-inspector' ]
+verbose url resolved https://registry.npmjs.org/node-inspector
+verbose etag "41K7GLAMWSQV8Z4NA7NSHU3V5"
+http GET https://registry.npmjs.org/node-inspector
+http 304 https://registry.npmjs.org/node-inspector
+silly get cb [ 304,
+silly get cb   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+silly get cb     etag: '"41K7GLAMWSQV8Z4NA7NSHU3V5"',
+silly get cb     date: 'Wed, 23 May 2012 16:54:51 GMT',
+silly get cb     'content-length': '0' } ]
+verbose etag node-inspector from cache
+silly name, range, hasData 2 [ 'node-inspector', '', true ]
+silly versions [ 'node-inspector',
+silly versions   [ '0.0.1',
+silly versions     '0.0.2',
+silly versions     '0.0.3',
+silly versions     '0.0.4',
+silly versions     '0.1.0',
+silly versions     '0.1.1',
+silly versions     '0.1.2',
+silly versions     '0.1.3',
+silly versions     '0.1.4',
+silly versions     '0.1.5',
+silly versions     '0.1.6',
+silly versions     '0.1.7',
+silly versions     '0.1.8',
+silly versions     '0.1.9',
+silly versions     '0.1.10' ] ]
+verbose bin dist [ '0.6-ares1.7.5-DEV-evundefined-openssl0.9.8r-v83.6.6.25-darwin-x64-11.3.0',
+verbose bin dist   { shasum: '92520889108761231acd20fecd9f04e297e563e2',
+verbose bin dist     tarball: 'http://registry.npmjs.org/node-inspector/-/node-inspector-0.1.10.tgz' } ]
+verbose caching /Users/jiqingke/.npm/node-inspector/0.1.10/package/package.json
+verbose loadDefaults node-inspector@0.1.10
+silly resolved [ { name: 'node-inspector',
+silly resolved     version: '0.1.10',
+silly resolved     description: 'Web Inspector based nodeJS debugger',
+silly resolved     homepage: 'http://github.com/dannycoates/node-inspector',
+silly resolved     author: { name: 'Danny Coates', email: 'dannycoates@gmail.com' },
+silly resolved     keywords: [ 'debug', 'debugger', 'inspector', 'profiler' ],
+silly resolved     repository: 
+silly resolved      { type: 'git',
+silly resolved        url: 'git://github.com/dannycoates/node-inspector.git' },
+silly resolved     engines: { node: '>=0.3.0' },
+silly resolved     bin: { 'node-inspector': './bin/inspector.js' },
+silly resolved     dependencies: { 'socket.io': '~0.8.2', paperboy: '~0.0.2' },
+silly resolved     _id: 'node-inspector@0.1.10',
+silly resolved     devDependencies: {},
+silly resolved     optionalDependencies: {},
+silly resolved     _engineSupported: true,
+silly resolved     _npmVersion: '1.1.21',
+silly resolved     _nodeVersion: 'v0.6.18',
+silly resolved     _defaultsLoaded: true,
+silly resolved     _from: 'node-inspector' } ]
+info into /Users/jiqingke/WorkSpace/MyWork/nodeWork node-inspector@0.1.10
+info installOne node-inspector@0.1.10
+verbose from cache /Users/jiqingke/.npm/node-inspector/0.1.10/package/package.json
+info unbuild /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector
+info unbuild /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector
+ERR! error rolling back node-inspector@0.1.10 Error: ENOTEMPTY, rmdir '/Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/node_modules/.bin'
+ERR! Error: ENOTEMPTY, rmdir '/Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/node_modules/.bin'
+ERR! You may report this log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Darwin 11.3.0
+ERR! command "node" "/usr/local/bin/npm" "install" "node-inspector"
+ERR! cwd /Users/jiqingke/WorkSpace/MyWork/nodeWork/dribbbleseeker
+ERR! node -v v0.6.18
+ERR! npm -v 1.1.21
+ERR! path /Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/node_modules/.bin
+ERR! code ENOTEMPTY
+ERR! message ENOTEMPTY, rmdir '/Users/jiqingke/WorkSpace/MyWork/nodeWork/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/node_modules/.bin'
+ERR! errno {}
+verbose exit [ 1, true ]
