@@ -2,9 +2,46 @@ var request = require('request'),
     imagehost = 'http://dribbble.com',
     mysqldb = require('./mysqldb.js'),
     events = require('events');
+/**
+ * 时间对象的格式化;
+ */
+Date.prototype.format = function(format) {
+    /*
+     * eg:format="YYYY-MM-dd hh:mm:ss";
+     */
+    var o = {
+    	"Y+" :this.getFullYear(),
+        "M+" :this.getMonth() + 1, // month
+        "d+" :this.getDate(), // day
+        "h+" :this.getHours(), // hour
+        "m+" :this.getMinutes(), // minute
+        "s+" :this.getSeconds(), // second
+        "q+" :Math.floor((this.getMonth() + 3) / 3), // quarter
+        "S" :this.getMilliseconds()
+    // millisecond
+    }
+    if (format === undefined){
+    	format = "YYYY-MM-dd hh:mm:ss";
+    }
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "")
+                .substr(4 - RegExp.$1.length));
+    }
 
-Object.prototype.Clone = function()
-{
+    for ( var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k]
+                    : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+}
+
+Array.prototype.unique2 = function () {
+    return this.sort().join(",,").replace(/(,|^)([^,]+)(,,\2)+(,|$)/g,"$1$2$4").replace(/,,+/g,",").replace(/,$/,"").split(",");
+}
+
+Object.prototype.Clone = function(){
     var objClone;
     if ( this.constructor == Object ) objClone = new this.constructor();
     else objClone = new this.constructor(this.valueOf());
@@ -26,21 +63,21 @@ Object.prototype.Clone = function()
      //objClone.valueOf = this.valueOf;
     return objClone;
 }
-var getInfoBylinks = function(infopage, prelink){	
-	for (var i = 0; i < infopage.length; i++){
-		var item = {};
-		if (infopage[i].links[0] == prelink){
+var getInfoBylinks = function(infopage, prelink){
+	var item = {
+			'title':'notitle',
+			'tags':'',
+			'date':new Date().format(),
+			'color':''
+	};	
+	for (var i = 0; i < infopage.length; i++){		
+		if (infopage[i].links.indexOf(prelink) != -1){
 			var info = infopage[i].info;
 			item['title'] = info[0].title;
 			item['tags'] = info[1].tags;
-			item['date'] = info[3].date.toDateString();
+			item['date'] = info[3].date.format();
 			item['color'] = info[2]['color'];
-			return item;
-		}else{
-			item['title'] = 'notitle';
-			item['tags'] = '';
-			item['date'] = new Date().toDateString();
-			item['color'] = '';
+			break;
 		}
 	}
 	return item;
@@ -48,20 +85,17 @@ var getInfoBylinks = function(infopage, prelink){
 var saveDataToDataBase = function(data){
 	var infopage = data[1];
 	var imgurls = data[2];
+	mysqldb.use();
 	for (var i = 0; i < imgurls.length; i++){
 		var prelink = imgurls[i].prelink;
 		var item = getInfoBylinks(infopage, prelink);
 		item['imgurl'] = imgurls[i].links.join(',');
 		mysqldb.insertLink(item['imgurl'], item['title'], item['date'], item['tags'], item['color']);
 	}
+	mysqldb.close();
 }
 var dribbbleRule = {
-	stopcase:function(counter){
-		if (counter > maxuse)
-			return true;
-		else
-			return false;
-	},
+	stopRule:'$(\'.next_page\').length == 0',
 	links:(function(maxuse){
 		var links = [];
 		var baseUrl = 'http://dribbble.com/shots/popular/';
@@ -70,8 +104,7 @@ var dribbbleRule = {
 			links.push(baseUrl + '?page=' + i);
 		}
 		return links;
-	})(10)
-	,
+	})(100),
 	info:[
 	{
 		key:'title',
@@ -113,11 +146,12 @@ var dribbbleFilter = function(url, rule, callb){
 	if (url == undefined) return;
 	var htmlfilter = function(url, rule){
 		var jsdom = require('jsdom');
-		//console.log('fetching data at ' + url);
 		request({ uri:url }, function (error, response, body) {
 		  if (error) {
 			console.log('Error when connect to ' + url);
-		  }	  
+			return;
+		  }
+		  console.log('Get response at ' + url);	  
 		  jsdom.env({
 			html: body,
 			scripts: [
@@ -156,8 +190,9 @@ var dribbbleFilter = function(url, rule, callb){
 					info.push(temp);							
 				}	
 			}
-			info.push({links:links});	
-			callb(url, links, info);
+			info.push({links:links});
+			callb(url, links, info, eval(rule.stopRule));
+			console.log(eval(rule.stopRule));
 		  });
 		});	
 	}
@@ -172,15 +207,20 @@ var dribbbleEngine = function(dribbbleRule){
 	rule.selector = dribbbleRule.selector;
 	rule.target = dribbbleRule.target;
 	rule.info = dribbbleRule.info;
-	//console.log(rule.info);	
+	rule.stopRule = dribbbleRule.stopRule;
+
 	var automtask = function(url, rule){
 		var that = {};
 		that.url = url;
 		that.rule = rule.Clone();
 		return function(callback){
 			//console.log(that);
-			new dribbbleFilter(that.url, that.rule, function(url, links, info){
-				callback(null, {prelink:url, links:links, info:info});
+			new dribbbleFilter(that.url, that.rule, function(url, links, info, go){
+				(function(url, links, info, go){
+					setTimeout(function(){
+						callback(go, {prelink:url, links:links, info:info});
+					}, Math.random()*500 + 500);
+				})(url,links, info, go);				
 			});
 		};
 	};
@@ -189,11 +229,9 @@ var dribbbleEngine = function(dribbbleRule){
 	for (var i = 0; i < urls.length; i ++ ){
 		if (typeof(urls[i]) == 'string'){
 			tasklist.push(new automtask(urls[i], rule));	
-		}			
+		}
 	}
-	
 	async.series(tasklist, function(err, results){
-		console.log(JSON.stringify(results));
 		data.push(results);
 		var links = [];
 		for (var i = 0; i < results.length; i++){

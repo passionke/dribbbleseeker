@@ -7,13 +7,20 @@ var Client = require('mysql').Client,
 client.user = 'root';
 client.password = 'sskirngke';
 
-var insertLink = function(url, title, date, tags, color){
+var use = function(){
 	client.query('USE ' + dataBaseName);
+}
+var insertLink = function(url, title, date, tags, color){
+	
 	client.query(
-		 	'INSERT INTO '+ tableName +' ' +  
+		 	'REPLACE INTO '+ tableName +' ' +  
   			'SET title = ?, date = ?, url = ?, tags = ?, color = ?',  
   			[title, date, url, tags, color]);
 	console.log('insert data ' + url + ' ' + title + ' ' + date + ' ' + tags + ' ' + color);
-  	client.end();
+}
+var close = function(){
+	client.end();
 }
 exports.insertLink = insertLink;
+exports.use = use;
+exports.close = close;
